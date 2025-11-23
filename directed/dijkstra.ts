@@ -1,6 +1,6 @@
 import { BinaryHeap } from "@std/data-structures/binary-heap";
 import { reversePath } from "./_reverse_path.ts";
-import { CostOptions, numberCostOptions } from "./cost_options.ts";
+import { type CostOptions, numberCostOptions } from "./cost_options.ts";
 
 export interface DijkstraOptions<Node, Cost = number> {
   /**
