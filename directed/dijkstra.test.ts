@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.189.0/testing/asserts.ts";
+import { assertEquals } from "@std/assert";
 import { dijkstra, dijkstraAll, dijkstraPartial } from "./dijkstra.ts";
 
 Deno.test("dijkstra() doc example", () => {

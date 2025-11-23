@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.189.0/testing/asserts.ts";
+import { assertEquals } from "@std/assert";
 import { aStarBag } from "./a_star.ts";
 
 Deno.test("multiple sinks", () => {

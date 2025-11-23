@@ -1,5 +1,32 @@
 {
-  "version": "2",
+  "version": "5",
+  "specifiers": {
+    "jsr:@alexreardon/limit-once@0.8": "0.8.0",
+    "jsr:@std/assert@^1.0.13": "1.0.16",
+    "jsr:@std/assert@^1.0.16": "1.0.16",
+    "jsr:@std/data-structures@^1.0.9": "1.0.9",
+    "jsr:@std/internal@^1.0.12": "1.0.12"
+  },
+  "jsr": {
+    "@alexreardon/limit-once@0.8.0": {
+      "integrity": "5d074aa6470a789b90ff0c108f0a1bb32815a1e16e7fb5e0f14c571e0afb8d0e"
+    },
+    "@std/assert@1.0.16": {
+      "integrity": "6a7272ed1eaa77defe76e5ff63ca705d9c495077e2d5fd0126d2b53fc5bd6532",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/data-structures@1.0.9": {
+      "integrity": "033d6e17e64bf1f84a614e647c1b015fa2576ae3312305821e1a4cb20674bb4d",
+      "dependencies": [
+        "jsr:@std/assert@^1.0.13"
+      ]
+    },
+    "@std/internal@1.0.12": {
+      "integrity": "972a634fd5bc34b242024402972cd5143eac68d8dffaca5eaa4dba30ce17b027"
+    }
+  },
   "remote": {
     "https://deno.land/std@0.140.0/_util/assert.ts": "e94f2eb37cebd7f199952e242c77654e43333c1ac4c5c700e929ea3aa5489f74",
     "https://deno.land/std@0.140.0/_util/os.ts": "3b4c6e27febd119d36a416d7a97bd3b0251b77c88942c8f16ee5953ea13e2e49",
@@ -115,5 +142,12 @@
     "https://deno.land/x/ts_morph@18.0.0/common/ts_morph_common.js": "845671ca951073400ce142f8acefa2d39ea9a51e29ca80928642f3f8cf2b7700",
     "https://deno.land/x/ts_morph@18.0.0/common/typescript.d.ts": "21c0786dddf52537611499340166278507eb9784628d321c2cb6acc696cba0f6",
     "https://deno.land/x/ts_morph@18.0.0/common/typescript.js": "d5c598b6a2db2202d0428fca5fd79fc9a301a71880831a805d778797d2413c59"
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@alexreardon/limit-once@0.8",
+      "jsr:@std/assert@^1.0.16",
+      "jsr:@std/data-structures@^1.0.9"
+    ]
   }
 }

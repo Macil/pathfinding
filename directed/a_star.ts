@@ -1,4 +1,4 @@
-import { BinaryHeap } from "https://deno.land/std@0.189.0/collections/binary_heap.ts";
+import { BinaryHeap } from "@std/data-structures/binary-heap";
 import { reversePath } from "./_reverse_path.ts";
 import { CostOptions, numberCostOptions } from "./cost_options.ts";
 
