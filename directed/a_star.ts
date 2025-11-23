@@ -66,8 +66,7 @@ export interface AStarOptions<Node, Cost = number> {
  * # Example
  *
  * ```ts
- * import { assertEquals } from "https://deno.land/std@0.189.0/testing/asserts.ts";
- * import { aStar } from "https://deno.land/x/lazy_pathfinding/directed/a_star.ts";
+ * import { assertEquals } from "@std/assert";
  *
  * type Pos = [number, number];
  *

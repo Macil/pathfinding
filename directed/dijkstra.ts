@@ -60,8 +60,7 @@ export interface DijkstraOptions<Node, Cost = number> {
  * # Example
  *
  * ```ts
- * import { assertEquals } from "https://deno.land/std@0.189.0/testing/asserts.ts";
- * import { dijkstra } from "https://deno.land/x/lazy_pathfinding/directed/dijkstra.ts";
+ * import { assertEquals } from "@std/assert";
  *
  * type Pos = [number, number];
  *

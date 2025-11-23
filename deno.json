@@ -1,14 +1,7 @@
 {
-  "tasks": {
-    "test": "deno test"
-  },
-  "test": {
-    "exclude": ["./npm"]
-  },
   "lint": {
-    "exclude": ["./npm"]
-  },
-  "fmt": {
-    "exclude": ["./npm"]
+    "rules": {
+      "exclude": ["no-import-prefix"]
+    }
   }
 }
