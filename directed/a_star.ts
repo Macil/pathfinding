@@ -24,18 +24,19 @@ export interface AStarOptions<Node, Cost = number> {
    */
   success: (node: Node) => boolean;
   /**
-   * A function that returns a unique key for a node. Equal nodes must return keys
-   * that are equal.
-   * If the nodes are primitive values, are represented by persistent unique objects,
-   * or are never encountered more than once, then the identity function (`x => x`)
-   * can be used here.
-   * Otherwise, a custom function that converts the node to a string is
-   * recommended. (`JSON.stringify` can be used for this.)
+   * A function that returns a unique key for a node. Equal nodes must return
+   * keys that are equal. If the nodes are primitive values, are represented by
+   * persistent unique objects, or are never encountered more than once, then
+   * the identity function (`x => x`) can be used here. Otherwise, a custom
+   * function that converts the node to a string is recommended.
+   * (`JSON.stringify` can be used for this.)
    *
    * In the future, if the Javascript [Record and
-   * Tuple](https://tc39.es/proposal-record-tuple/tutorial/) proposal is implemented,
-   * then this option may be changed to be optional with a default value set to the identity function,
-   * in order to make Record and Tuple nodes work as simply as possible.
+   * Tuple](https://tc39.es/proposal-record-tuple/tutorial/) proposal or the
+   * [Composites](https://github.com/tc39/proposal-composites) proposal is
+   * implemented, then this option may be changed to be optional with a default
+   * value set to the identity function, in order to make Record and Tuple nodes
+   * work as simply as possible.
    */
   key: (node: Node) => unknown;
   /**
