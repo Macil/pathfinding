@@ -141,9 +141,9 @@ export function aStar<Node, Cost = number, Key = unknown>(
         .map((nodeKey) => encounteredNodes.get(nodeKey)!.node);
       return [path, cost];
     }
-    // We may have inserted a node several time into the binary heap if we found
-    // a better way to access it. Ensure that we are currently dealing with the
-    // best path and discard the others.
+    // We may have inserted a node several times into the binary heap if we
+    // found a better way to access it. Ensure that we are currently dealing
+    // with the best path and discard the others.
     if (costOptions.compareFn(smallestCostHolder.cost, cost) > 0) {
       continue;
     }
@@ -275,9 +275,9 @@ export function aStarBag<Node, Cost = number, Key = unknown>(
       minCost = cost;
       sinks.add(smallestCostHolder.nodeKey);
     }
-    // We may have inserted a node several time into the binary heap if we found
-    // a better way to access it. Ensure that we are currently dealing with the
-    // best path and discard the others.
+    // We may have inserted a node several times into the binary heap if we
+    // found a better way to access it. Ensure that we are currently dealing
+    // with the best path and discard the others.
     if (costOptions.compareFn(smallestCostHolder.cost, cost) > 0) {
       continue;
     }
