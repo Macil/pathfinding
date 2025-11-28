@@ -2,7 +2,7 @@ import { BinaryHeap } from "@std/data-structures/binary-heap";
 import { reversePath } from "./_reverse_path.ts";
 import { type CostOptions, numberCostOptions } from "./cost_options.ts";
 
-export interface AStarOptions<Node, Cost = number> {
+export interface AStarOptions<Node, Cost = number, Key = unknown> {
   /**
    * The starting node.
    */
@@ -38,7 +38,7 @@ export interface AStarOptions<Node, Cost = number> {
    * value set to the identity function, in order to make Record and Tuple nodes
    * work as simply as possible.
    */
-  key: (node: Node) => unknown;
+  key: (node: Node) => Key;
   /**
    * This option lets custom functions for managing the Cost values be specified.
    * This is not necessary to use if the Cost type is a number.
@@ -99,13 +99,13 @@ export interface AStarOptions<Node, Cost = number> {
  * assertEquals(result![1], 4);
  * ```
  */
-export function aStar<Node, Cost = number>(
-  options: AStarOptions<Node, Cost>,
+export function aStar<Node, Cost = number, Key = unknown>(
+  options: AStarOptions<Node, Cost, Key>,
 ): [Node[], Cost] | undefined {
   const costOptions = options.costOptions ??
     numberCostOptions as CostOptions<unknown> as CostOptions<Cost>;
 
-  const toSee = new BinaryHeap<SmallestCostHolder<Cost>>((a, b) =>
+  const toSee = new BinaryHeap<SmallestCostHolder<Cost, Key>>((a, b) =>
     compareSmallestCostHolders(costOptions, a, b)
   );
   toSee.push({
@@ -116,13 +116,11 @@ export function aStar<Node, Cost = number>(
 
   interface EncounteredNodeEntry<Node, Cost> {
     node: Node;
-    /**
-     * Either the key of the parent or `undefined`.
-     */
-    parentKey: unknown;
+    /** Either the key of the parent or `undefined` if no parent. */
+    parentKey: Key | undefined;
     cost: Cost;
   }
-  const encounteredNodes = new Map<unknown, EncounteredNodeEntry<Node, Cost>>();
+  const encounteredNodes = new Map<Key, EncounteredNodeEntry<Node, Cost>>();
   encounteredNodes.set(options.key(options.start), {
     node: options.start,
     parentKey: undefined,
@@ -186,7 +184,7 @@ export function aStar<Node, Cost = number>(
   return undefined;
 }
 
-interface SmallestCostHolder<Cost> {
+interface SmallestCostHolder<Cost, Key> {
   /**
    * The estimated cost through this node to the goal.
    */
@@ -195,13 +193,13 @@ interface SmallestCostHolder<Cost> {
    * The cost to reach this node.
    */
   cost: Cost;
-  nodeKey: unknown;
+  nodeKey: Key;
 }
 
-function compareSmallestCostHolders<Cost>(
+function compareSmallestCostHolders<Cost, Key>(
   costOptions: CostOptions<Cost>,
-  a: SmallestCostHolder<Cost>,
-  b: SmallestCostHolder<Cost>,
+  a: SmallestCostHolder<Cost, Key>,
+  b: SmallestCostHolder<Cost, Key>,
 ): number {
   const estimatedCostsCompared = costOptions.compareFn(
     a.estimatedCost,
@@ -227,8 +225,8 @@ function compareSmallestCostHolders<Cost>(
  * each shortest path). If no paths are found, `undefined` is returned. Each path comprises both the start and an end node. Note that while every path shares the same
  * start node, different paths may have different end nodes.
  */
-export function aStarBag<Node, Cost = number>(
-  options: AStarOptions<Node, Cost>,
+export function aStarBag<Node, Cost = number, Key = unknown>(
+  options: AStarOptions<Node, Cost, Key>,
 ): [IteratorObject<Node[]>, Cost] | undefined {
   const costOptions = options.costOptions ??
     numberCostOptions as CostOptions<unknown> as CostOptions<Cost>;
@@ -236,9 +234,9 @@ export function aStarBag<Node, Cost = number>(
   const startKey = options.key(options.start);
 
   let minCost: Cost | undefined;
-  const sinks = new Set<unknown>();
+  const sinks = new Set<Key>();
 
-  const toSee = new BinaryHeap<SmallestCostHolder<Cost>>((a, b) =>
+  const toSee = new BinaryHeap<SmallestCostHolder<Cost, Key>>((a, b) =>
     compareSmallestCostHolders(costOptions, a, b)
   );
   toSee.push({
@@ -247,12 +245,15 @@ export function aStarBag<Node, Cost = number>(
     nodeKey: startKey,
   });
 
-  interface EncounteredNodeEntry<Node, Cost> {
+  interface EncounteredNodeEntry<Node, Cost, Key> {
     node: Node;
-    parentKeys: Set<unknown>;
+    parentKeys: Set<Key>;
     cost: Cost;
   }
-  const encounteredNodes = new Map<unknown, EncounteredNodeEntry<Node, Cost>>();
+  const encounteredNodes = new Map<
+    Key,
+    EncounteredNodeEntry<Node, Cost, Key>
+  >();
   encounteredNodes.set(startKey, {
     node: options.start,
     parentKeys: new Set(),
@@ -334,7 +335,7 @@ export function aStarBag<Node, Cost = number>(
     const paths = (function* () {
       const path: Node[] = [];
 
-      function* step(path: Node[], currentKey: unknown): Generator<Node[]> {
+      function* step(path: Node[], currentKey: Key): Generator<Node[]> {
         const parentKeys = encounteredNodes.get(currentKey)!.parentKeys;
         for (const parentKey of parentKeys) {
           path.push(encounteredNodes.get(parentKey)!.node);

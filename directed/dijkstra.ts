@@ -2,7 +2,7 @@ import { BinaryHeap } from "@std/data-structures/binary-heap";
 import { reversePath } from "./_reverse_path.ts";
 import { type CostOptions, numberCostOptions } from "./cost_options.ts";
 
-export interface DijkstraOptions<Node, Cost = number> {
+export interface DijkstraOptions<Node, Cost = number, Key = unknown> {
   /**
    * The starting node.
    */
@@ -32,7 +32,7 @@ export interface DijkstraOptions<Node, Cost = number> {
    * value set to the identity function, in order to make Record and Tuple nodes
    * work as simply as possible.
    */
-  key: (node: Node) => unknown;
+  key: (node: Node) => Key;
   /**
    * This option lets custom functions for managing the Cost values be specified.
    * This is not necessary to use if the Cost type is a number.
@@ -88,8 +88,8 @@ export interface DijkstraOptions<Node, Cost = number> {
  * assertEquals(result![1], 4);
  * ```
  */
-export function dijkstra<Node, Cost = number>(
-  options: DijkstraOptions<Node, Cost>,
+export function dijkstra<Node, Cost = number, Key = unknown>(
+  options: DijkstraOptions<Node, Cost, Key>,
 ): [Node[], Cost] | undefined {
   const [encounteredNodes, successNodeKey] = dijkstraInternal(options);
   if (successNodeKey === undefined) {
@@ -100,12 +100,10 @@ export function dijkstra<Node, Cost = number>(
   return [path, cost];
 }
 
-export interface DijkstraEncounteredNodeEntry<Node, Cost> {
+export interface DijkstraEncounteredNodeEntry<Node, Cost, Key> {
   node: Node;
-  /**
-   * Either the key of the parent or `undefined`.
-   */
-  parentKey: unknown;
+  /** Either the key of the parent or `undefined` if no parent. */
+  parentKey: Key | undefined;
   cost: Cost;
 }
 
@@ -149,9 +147,9 @@ export interface DijkstraEncounteredNodeEntry<Node, Cost> {
  * });
  * ```
  */
-export function dijkstraAll<Node, Cost>(
-  options: Omit<DijkstraOptions<Node, Cost>, "success">,
-): Map<unknown, DijkstraEncounteredNodeEntry<Node, Cost>> {
+export function dijkstraAll<Node, Cost = number, Key = unknown>(
+  options: Omit<DijkstraOptions<Node, Cost, Key>, "success">,
+): Map<Key, DijkstraEncounteredNodeEntry<Node, Cost, Key>> {
   return dijkstraInternal({ ...options, success: () => false })[0];
 }
 
@@ -168,9 +166,9 @@ export function dijkstraAll<Node, Cost>(
  * The {@link buildPath} function can be used to build a full path from the starting point to one
  * of the reachable targets.
  */
-export function dijkstraPartial<Node, Cost>(
-  options: DijkstraOptions<Node, Cost>,
-): [Map<unknown, DijkstraEncounteredNodeEntry<Node, Cost>>, Node | undefined] {
+export function dijkstraPartial<Node, Cost = number, Key = unknown>(
+  options: DijkstraOptions<Node, Cost, Key>,
+): [Map<Key, DijkstraEncounteredNodeEntry<Node, Cost, Key>>, Node | undefined] {
   const [encounteredNodes, successNodeKey] = dijkstraInternal(options);
   const successNode = successNodeKey === undefined
     ? undefined
@@ -190,11 +188,11 @@ export function dijkstraPartial<Node, Cost>(
  * @returns an array with a path from the farthest parent up to the target, including
  * the target itself.
  */
-export function buildPath<Node>(
-  targetKey: unknown,
+export function buildPath<Node, Cost = number, Key = unknown>(
+  targetKey: Key,
   encounteredNodes: ReadonlyMap<
-    unknown,
-    DijkstraEncounteredNodeEntry<Node, unknown>
+    Key,
+    DijkstraEncounteredNodeEntry<Node, Cost, Key>
   >,
 ): Node[] {
   return reversePath(encounteredNodes, (e) => e.parentKey, targetKey)
@@ -205,13 +203,13 @@ export function buildPath<Node>(
  * @returns A map of encountered node keys to their parent key and cost, and the key
  * of the goal node reached if any or else `undefined`.
  */
-function dijkstraInternal<Node, Cost>(
-  options: DijkstraOptions<Node, Cost>,
-): [Map<unknown, DijkstraEncounteredNodeEntry<Node, Cost>>, unknown] {
+function dijkstraInternal<Node, Cost, Key>(
+  options: DijkstraOptions<Node, Cost, Key>,
+): [Map<Key, DijkstraEncounteredNodeEntry<Node, Cost, Key>>, Key | undefined] {
   const costOptions = options.costOptions ??
     numberCostOptions as CostOptions<unknown> as CostOptions<Cost>;
 
-  const toSee = new BinaryHeap<SmallestCostHolder<Cost>>((a, b) =>
+  const toSee = new BinaryHeap<SmallestCostHolder<Cost, Key>>((a, b) =>
     compareSmallestCostHolders(costOptions, a, b)
   );
   toSee.push({
@@ -220,8 +218,8 @@ function dijkstraInternal<Node, Cost>(
   });
 
   const encounteredNodes = new Map<
-    unknown,
-    DijkstraEncounteredNodeEntry<Node, Cost>
+    Key,
+    DijkstraEncounteredNodeEntry<Node, Cost, Key>
   >();
   encounteredNodes.set(options.key(options.start), {
     node: options.start,
@@ -278,18 +276,18 @@ function dijkstraInternal<Node, Cost>(
   return [encounteredNodes, undefined];
 }
 
-interface SmallestCostHolder<Cost> {
+interface SmallestCostHolder<Cost, Key> {
   /**
    * The cost to reach this node.
    */
   cost: Cost;
-  nodeKey: unknown;
+  nodeKey: Key;
 }
 
-function compareSmallestCostHolders<Cost>(
+function compareSmallestCostHolders<Cost, Key>(
   costOptions: CostOptions<Cost>,
-  a: SmallestCostHolder<Cost>,
-  b: SmallestCostHolder<Cost>,
+  a: SmallestCostHolder<Cost, Key>,
+  b: SmallestCostHolder<Cost, Key>,
 ): number {
   return costOptions.compareFn(a.cost, b.cost);
 }
