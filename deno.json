@@ -1,6 +1,6 @@
 {
   "name": "@macil/pathfinding",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "(MIT OR Apache-2.0)",
   "exports": {
     "./directed/a_star": "./directed/a_star.ts",
