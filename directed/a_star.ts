@@ -229,7 +229,7 @@ function compareSmallestCostHolders<Cost>(
  */
 export function aStarBag<Node, Cost = number>(
   options: AStarOptions<Node, Cost>,
-): [Iterable<Node[]>, Cost] | undefined {
+): [IteratorObject<Node[]>, Cost] | undefined {
   const costOptions = options.costOptions ??
     numberCostOptions as CostOptions<unknown> as CostOptions<Cost>;
 
@@ -334,7 +334,7 @@ export function aStarBag<Node, Cost = number>(
     const paths = (function* () {
       const path: Node[] = [];
 
-      function* step(path: Node[], currentKey: unknown): Iterable<Node[]> {
+      function* step(path: Node[], currentKey: unknown): Generator<Node[]> {
         const parentKeys = encounteredNodes.get(currentKey)!.parentKeys;
         for (const parentKey of parentKeys) {
           path.push(encounteredNodes.get(parentKey)!.node);
