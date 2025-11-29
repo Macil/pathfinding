@@ -11,8 +11,13 @@ function getAndRedirect(table: number[], idx: number): number {
   return idx;
 }
 
-interface SeparateComponentsResults<Node> {
+export interface SeparateComponentsResults<Node> {
+  /** This map associates every node to its set identifier. */
   setIdsByNode: Map<Node, number>;
+  /**
+   * This array has a set identifier for each group passed to
+   * {@link separateComponents}.
+   */
   setIdsByGroup: number[];
 }
 
