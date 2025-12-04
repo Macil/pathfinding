@@ -1,4 +1,4 @@
-# @macil/pathfinding
+# @macil/pathfinding [![JSR](https://jsr.io/badges/@macil/pathfinding)](https://jsr.io/@macil/pathfinding)
 
 This library implements several pathfinding and graph algorithms. This library
 works with Typescript and Javascript in both Deno and Node.
